@@ -11,6 +11,7 @@ type Edit struct {
 	Value  string
 }
 
+// EditScript is slice of Edit.
 type EditScript = []Edit
 
 // String shows Value with prefix if added or deleted.

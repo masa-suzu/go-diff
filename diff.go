@@ -27,21 +27,19 @@ func diff(x, y []rune) []Edit {
 	var p []path
 
 	for D := 0; D <= m+n; D++ {
-		var kMin, kMax int
-
+		var min, max int
 		if D <= m {
-			kMin = -D
+			min = -D
 		} else {
-			kMin = D - (2 * m)
+			min = D - (2 * m)
 		}
-
 		if D <= n {
-			kMax = D
+			max = D
 		} else {
-			kMax = -D + (2 * n)
+			max = -D + (2 * n)
 		}
 
-		for k := kMax; k >= kMin; k -= 2 {
+		for k := max; k >= min; k -= 2 {
 			i := 0
 			if D == 0 {
 				i = 0
@@ -50,13 +48,17 @@ func diff(x, y []rune) []Edit {
 			} else if k == D {
 				i = v[offset+k-1]
 			} else {
-				i = max(v[offset+k+1]+1, v[offset+k-1])
+				if v[offset+k+1]+1 > v[offset+k-1] {
+					i = v[offset+k+1] + 1
+				} else {
+					i = v[offset+k-1]
+				}
 			}
 
 			p = append(p, path{i: i, j: i + k})
 
 			for i < m && i+k < n && x[i] == y[i+k] {
-				i += 1
+				i++
 				p = append(p, path{i: i, j: i + k})
 			}
 			if k == n-m && i == m {
@@ -99,11 +101,4 @@ func traceGraph(path []path, x []rune, y []rune) []Edit {
 		ses = append(ses, reversedSes[i])
 	}
 	return ses
-}
-
-func max(x, y int) int {
-	if x > y {
-		return x
-	}
-	return y
 }
