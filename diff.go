@@ -22,15 +22,14 @@ func diff(x, y []rune) []Edit {
 	m := len(x)
 	n := len(y)
 	v := make([]int, m+n+1)
-	offset := m
 
 	var p []path
 
-	for D := 0; D <= m+n; D++ {
-		min, max := getBoundary(D, m, n)
+	for d := 0; d <= m+n; d++ {
+		min, max := getBoundary(d, m, n)
 
 		for k := max; k >= min; k -= 2 {
-			i := advance(v, D, k, offset)
+			i := advance(v, d, k, m)
 
 			p = append(p, path{i: i, j: i + k})
 
@@ -41,7 +40,7 @@ func diff(x, y []rune) []Edit {
 			if k == n-m && i == m {
 				return tracePath(p, x, y)
 			}
-			v[offset+k] = i
+			v[m+k] = i
 		}
 	}
 	// Never reach here.
@@ -97,17 +96,19 @@ func getBoundary(d int, m int, n int) (int, int) {
 }
 
 func advance(v []int, d int, k int, offset int) int {
+	positive := offset + k + 1
+	negative := offset + k - 1
 	if d == 0 {
 		return 0
 	}
 	if k == -d {
-		return v[offset+k+1] + 1
+		return v[positive] + 1
 	}
 	if k == d {
-		return v[offset+k-1]
+		return v[negative]
 	}
-	if v[offset+k+1]+1 > v[offset+k-1] {
-		return v[offset+k+1] + 1
+	if v[positive]+1 > v[negative] {
+		return v[positive] + 1
 	}
-	return v[offset+k-1]
+	return v[negative]
 }
