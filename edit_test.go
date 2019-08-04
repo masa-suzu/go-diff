@@ -2,6 +2,7 @@ package diff_test
 
 import (
 	"testing"
+
 	"github.com/masa-suzu/go-diff"
 )
 
@@ -46,9 +47,9 @@ func TestEditScript_String(t *testing.T) {
 		{
 			name: "unChange-add-delete",
 			es: diff.EditScript{
-				diff.Edit{ Action: 0, Value:"qaz" },
-				diff.Edit{ Action: 1, Value:"wsx" },
-				diff.Edit{ Action: -1, Value:"edc" },
+				diff.Edit{Action: 0, Value: "qaz"},
+				diff.Edit{Action: 1, Value: "wsx"},
+				diff.Edit{Action: -1, Value: "edc"},
 			},
 			want: "qaz\n+wsx\n-edc",
 		},

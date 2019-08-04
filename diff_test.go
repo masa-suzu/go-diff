@@ -1,9 +1,10 @@
 package diff_test
 
 import (
-	"github.com/masa-suzu/go-diff"
 	"reflect"
 	"testing"
+
+	"github.com/masa-suzu/go-diff"
 )
 
 func TestDiff(t *testing.T) {
@@ -59,7 +60,7 @@ func TestDiff(t *testing.T) {
 			want: []diff.Edit{
 				{Action: 0, Value: "x"},
 				{Action: -1, Value: "v"},
-				{Action: 0,  Value: "z"},
+				{Action: 0, Value: "z"},
 			},
 		},
 		{

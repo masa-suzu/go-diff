@@ -1,3 +1,3 @@
 test:
-	goimports -l ./
+	goimports -l -w ./
 	go test  -cover ./... -v
