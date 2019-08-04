@@ -1,8 +1,8 @@
 package diff
 
 import (
+	"bytes"
 	"fmt"
-	"strings"
 )
 
 // Edit represents an edit of string.
@@ -22,16 +22,20 @@ func (e *Edit) String() string {
 	case -1:
 		return fmt.Sprintf("-%s", e.Value)
 	default:
-		return fmt.Sprintf("%s", e.Value)
+		return e.Value
 	}
 }
 
 // String shows each Edit.String line by line
 func String(es EditScript) string {
-	var b []string
 
-	for _, e := range es {
-		b = append(b, e.String())
+	b := bytes.Buffer{}
+
+	for i, e := range es {
+		b.WriteString(e.String())
+		if i+1 < len(es) {
+			b.WriteString("\n")
+		}
 	}
-	return strings.Join(b, "\n")
+	return b.String()
 }

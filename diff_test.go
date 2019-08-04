@@ -105,16 +105,16 @@ func TestDiff(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt // pin!
 		t.Run(tt.name, func(t *testing.T) {
-			want := tt.want
 			got := diff.Diff(tt.args.a, tt.args.b)
 
-			if len(want) != len(got) {
-				t.Errorf("len(got) = %v, len(want) %v", len(got), len(want))
+			if len(tt.want) != len(got) {
+				t.Errorf("len(got) = %v, len(want) %v", len(got), len(tt.want))
 			}
 
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Diff() = %v, want %v", got, want)
+				t.Errorf("Diff() = %v, want %v", got, tt.want)
 			}
 		})
 	}

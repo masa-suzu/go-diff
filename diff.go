@@ -45,7 +45,7 @@ func diff(x, y []rune) []Edit {
 		}
 	}
 	// Never reach here.
-	panic(fmt.Errorf("Found a bug: x = %v, y = %v ", x, y))
+	panic(fmt.Errorf("found a bug: x = %v, y = %v ", x, y))
 }
 
 func tracePath(path []path, x []rune, y []rune) []Edit {
@@ -56,16 +56,17 @@ func tracePath(path []path, x []rune, y []rune) []Edit {
 	for i > 0 {
 		p := path[i]
 		q := path[i-k]
-		if p.i-q.i == 1 && p.j-q.j == 1 {
+		switch {
+		case p.i-q.i == 1 && p.j-q.j == 1:
 			edit := Edit{Action: 0, Value: string(x[q.i])}
 			reversedSes = append(reversedSes, edit)
-		} else if p.j-q.j == 1 && p.i == q.i {
+		case p.j-q.j == 1 && p.i == q.i:
 			edit := Edit{Action: 1, Value: string(y[q.j])}
 			reversedSes = append(reversedSes, edit)
-		} else if p.i-q.i == 1 && p.j == q.j {
+		case p.i-q.i == 1 && p.j == q.j:
 			edit := Edit{Action: -1, Value: string(x[q.i])}
 			reversedSes = append(reversedSes, edit)
-		} else {
+		default:
 			k++
 			continue
 		}
@@ -80,29 +81,29 @@ func tracePath(path []path, x []rune, y []rune) []Edit {
 	return ses
 }
 
-func getBoundary(D int, m int, n int) (int, int) {
+func getBoundary(d int, m int, n int) (int, int) {
 	var min, max int
-	if D <= m {
-		min = -D
+	if d <= m {
+		min = -d
 	} else {
-		min = D - (2 * m)
+		min = d - (2 * m)
 	}
-	if D <= n {
-		max = D
+	if d <= n {
+		max = d
 	} else {
-		max = -D + (2 * n)
+		max = -d + (2 * n)
 	}
 	return min, max
 }
 
-func advance(v []int, D int, k int, offset int) int {
-	if D == 0 {
+func advance(v []int, d int, k int, offset int) int {
+	if d == 0 {
 		return 0
 	}
-	if k == -D {
+	if k == -d {
 		return v[offset+k+1] + 1
 	}
-	if k == D {
+	if k == d {
 		return v[offset+k-1]
 	}
 	if v[offset+k+1]+1 > v[offset+k-1] {

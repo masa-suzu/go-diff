@@ -29,6 +29,7 @@ func TestEditString(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
+		tt := tt // pin!
 		t.Run(tt.name, func(t *testing.T) {
 			e := tt.arg
 			if got := e.String(); got != tt.want {
@@ -55,6 +56,7 @@ func TestEditScript_String(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
+		tt := tt // pin!
 		t.Run(tt.name, func(t *testing.T) {
 			if got := diff.String(tt.es); got != tt.want {
 				d := diff.Diff(tt.want, got)
