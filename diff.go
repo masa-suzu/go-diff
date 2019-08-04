@@ -27,33 +27,10 @@ func diff(x, y []rune) []Edit {
 	var p []path
 
 	for D := 0; D <= m+n; D++ {
-		var min, max int
-		if D <= m {
-			min = -D
-		} else {
-			min = D - (2 * m)
-		}
-		if D <= n {
-			max = D
-		} else {
-			max = -D + (2 * n)
-		}
+		min, max := getBoundary(D, m, n)
 
 		for k := max; k >= min; k -= 2 {
-			i := 0
-			if D == 0 {
-				i = 0
-			} else if k == -D {
-				i = v[offset+k+1] + 1
-			} else if k == D {
-				i = v[offset+k-1]
-			} else {
-				if v[offset+k+1]+1 > v[offset+k-1] {
-					i = v[offset+k+1] + 1
-				} else {
-					i = v[offset+k-1]
-				}
-			}
+			i := advance(v, D, k, offset)
 
 			p = append(p, path{i: i, j: i + k})
 
@@ -62,16 +39,16 @@ func diff(x, y []rune) []Edit {
 				p = append(p, path{i: i, j: i + k})
 			}
 			if k == n-m && i == m {
-				return traceGraph(p, x, y)
+				return tracePath(p, x, y)
 			}
 			v[offset+k] = i
 		}
 	}
-	//
+	// Never reach here.
 	panic(fmt.Errorf("Found a bug: x = %v, y = %v ", x, y))
 }
 
-func traceGraph(path []path, x []rune, y []rune) []Edit {
+func tracePath(path []path, x []rune, y []rune) []Edit {
 	i := len(path) - 1
 	k := 1
 
@@ -101,4 +78,35 @@ func traceGraph(path []path, x []rune, y []rune) []Edit {
 		ses = append(ses, reversedSes[i])
 	}
 	return ses
+}
+
+func getBoundary(D int, m int, n int) (int, int) {
+	var min, max int
+	if D <= m {
+		min = -D
+	} else {
+		min = D - (2 * m)
+	}
+	if D <= n {
+		max = D
+	} else {
+		max = -D + (2 * n)
+	}
+	return min, max
+}
+
+func advance(v []int, D int, k int, offset int) int {
+	if D == 0 {
+		return 0
+	}
+	if k == -D {
+		return v[offset+k+1] + 1
+	}
+	if k == D {
+		return v[offset+k-1]
+	}
+	if v[offset+k+1]+1 > v[offset+k-1] {
+		return v[offset+k+1] + 1
+	}
+	return v[offset+k-1]
 }
