@@ -1,0 +1,7 @@
+language: go
+
+script:
+  - go mod download
+  - make
+  - diff <(goimports -d .) <(printf "")
+  - diff <(golint ./...) <(printf "")
