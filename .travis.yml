@@ -8,5 +8,5 @@ install:
 
 script:
  - make test
- - diff <(goimports -d .) <(printf "")
+ - diff <(go run "golang.org/x/tools/cmd/goimports" -d .) <(printf "")
  - diff <(golint ./...) <(printf "")
