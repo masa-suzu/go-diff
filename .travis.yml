@@ -1,7 +1,12 @@
 language: go
 
-script:
+go:
+ - "1.12"
+
+install:
   - go mod download
+
+script:
   - make
   - diff <(goimports -d .) <(printf "")
   - diff <(golint ./...) <(printf "")
