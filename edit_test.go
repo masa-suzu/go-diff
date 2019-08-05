@@ -27,6 +27,11 @@ func TestEditString(t *testing.T) {
 			want: "x",
 			arg:  diff.Edit{Action: 0, Value: "x"},
 		},
+		{
+			name: "replace",
+			want: "-x\n+y",
+			arg:  diff.Edit{Action: 2, Value: "y", From: "x"},
+		},
 	}
 	for _, tt := range tests {
 		tt := tt // pin!

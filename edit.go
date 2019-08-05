@@ -9,6 +9,7 @@ import (
 type Edit struct {
 	Action int
 	Value  string
+	From   string
 }
 
 // EditScript is slice of Edit.
@@ -17,6 +18,8 @@ type EditScript = []Edit
 // String shows Value with prefix if added or deleted.
 func (e *Edit) String() string {
 	switch e.Action {
+	case 2:
+		return fmt.Sprintf("-%s\n+%s", e.From, e.Value)
 	case 1:
 		return fmt.Sprintf("+%s", e.Value)
 	case -1:

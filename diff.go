@@ -54,20 +54,26 @@ func tracePath(path []path, x []string, y []string) []Edit {
 	i := len(path) - 1
 	k := 1
 
-	var reversedSes []Edit
+	var ses []Edit
 	for i > 0 {
 		p := path[i]
 		q := path[i-k]
+
+		di := p.i - q.i
+		dj := p.j - q.j
+
 		switch {
-		case p.i-q.i == 1 && p.j-q.j == 1:
-			edit := Edit{Action: 0, Value: x[q.i]}
-			reversedSes = append(reversedSes, edit)
-		case p.j-q.j == 1 && p.i == q.i:
-			edit := Edit{Action: 1, Value: y[q.j]}
-			reversedSes = append(reversedSes, edit)
-		case p.i-q.i == 1 && p.j == q.j:
-			edit := Edit{Action: -1, Value: x[q.i]}
-			reversedSes = append(reversedSes, edit)
+		case di == 1 && dj == 1:
+			ses = append([]Edit{{Action: 0, Value: x[q.i]}}, ses...)
+		case di == 0 && dj == 1:
+			ses = append([]Edit{{Action: 1, Value: y[q.j]}}, ses...)
+		case di == 1 && dj == 0:
+			if len(ses) > 0 && ses[0].Action == 1 {
+				added := ses[0]
+				ses[0] = Edit{Action: 2, From: x[q.i], Value: added.Value}
+			} else {
+				ses = append([]Edit{{Action: -1, Value: x[q.i]}}, ses...)
+			}
 		default:
 			k++
 			continue
@@ -76,10 +82,6 @@ func tracePath(path []path, x []string, y []string) []Edit {
 		k = 1
 	}
 
-	var ses []Edit
-	for i := len(reversedSes) - 1; i >= 0; i-- {
-		ses = append(ses, reversedSes[i])
-	}
 	return ses
 }
 

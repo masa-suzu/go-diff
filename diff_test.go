@@ -34,8 +34,7 @@ func TestDiff(t *testing.T) {
 				b: "y\nz",
 			},
 			want: []diff.Edit{
-				{Action: -1, Value: ""},
-				{Action: 1, Value: "y"},
+				{Action: 2, From: "", Value: "y"},
 				{Action: 1, Value: "z"},
 			},
 		},
@@ -47,8 +46,7 @@ func TestDiff(t *testing.T) {
 			},
 			want: []diff.Edit{
 				{Action: -1, Value: "x"},
-				{Action: -1, Value: "y"},
-				{Action: 1, Value: ""},
+				{Action: 2, From: "y", Value: ""},
 			},
 		},
 		{
@@ -86,8 +84,7 @@ w := x`,
 			},
 			want: []diff.Edit{
 				{Action: 0, Value: `x := "hello"`},
-				{Action: -1, Value: "w := z"},
-				{Action: 1, Value: `y := "world"`},
+				{Action: 2, From: "w := z", Value: `y := "world"`},
 				{Action: 1, Value: "w := x"},
 			},
 		},
