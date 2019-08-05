@@ -3,8 +3,10 @@ language: go
 go:
  - "1.12"
 
+install:
+ - env GO111MODULE=on go mod download
+
 script:
- - go build
  - make test
  - diff <(goimports -d .) <(printf "")
  - diff <(golint ./...) <(printf "")
