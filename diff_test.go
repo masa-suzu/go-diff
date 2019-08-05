@@ -52,6 +52,30 @@ func TestDiff(t *testing.T) {
 			},
 		},
 		{
+			name: "add-delete",
+			args: args{
+				a: `1
+2
+4
+5
+`,
+				b: `1
+2
+3
+4
+`,
+			},
+			want: []diff.Edit{
+				{Action: 0, Value: "1"},
+				{Action: 0, Value: "2"},
+				{Action: 1, Value: "3"},
+				{Action: 0, Value: "4"},
+				{Action: -1, Value: "5"},
+				{Action: 0, Value: ""},
+			},
+		},
+
+		{
 			name: "add-deleted-replace",
 			args: args{
 				a: `x := "hello"
