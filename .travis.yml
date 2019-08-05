@@ -4,7 +4,4 @@ go:
  - "1.12"
 
 script:
- - go build
- - make test
- - diff <(goimports -d .) <(printf "")
- - diff <(golint ./...) <(printf "")
+ - go test  -cover ./... -v
