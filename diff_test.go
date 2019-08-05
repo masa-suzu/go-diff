@@ -24,82 +24,47 @@ func TestDiff(t *testing.T) {
 				b: "xyz",
 			},
 			want: []diff.Edit{
-				{Action: 0, Value: "x"},
-				{Action: 0, Value: "y"},
-				{Action: 0, Value: "z"},
-			},
-		},
-		{
-			name: "added1",
-			args: args{
-				a: "",
-				b: "x",
-			},
-			want: []diff.Edit{
-				{Action: 1, Value: "x"},
+				{Action: 0, Value: "xyz"},
 			},
 		},
 		{
 			name: "added2",
 			args: args{
-				a: "xz",
-				b: "xyz",
+				a: "",
+				b: "y\nz",
 			},
 			want: []diff.Edit{
-				{Action: 0, Value: "x"},
+				{Action: -1, Value: ""},
 				{Action: 1, Value: "y"},
-				{Action: 0, Value: "z"},
+				{Action: 1, Value: "z"},
 			},
 		},
 		{
 			name: "deleted",
 			args: args{
-				a: "xvz",
-				b: "xz",
+				a: "x\ny",
+				b: "",
 			},
 			want: []diff.Edit{
-				{Action: 0, Value: "x"},
-				{Action: -1, Value: "v"},
-				{Action: 0, Value: "z"},
+				{Action: -1, Value: "x"},
+				{Action: -1, Value: "y"},
+				{Action: 1, Value: ""},
 			},
 		},
 		{
-			name: "added-and-deleted",
+			name: "add-deleted-replace",
 			args: args{
-				a: "stream",
-				b: "cream",
+				a: `x := "hello"
+w := z`,
+				b: `x := "hello"
+y := "world"
+w := x`,
 			},
 			want: []diff.Edit{
-				{Action: -1, Value: "s"},
-				{Action: -1, Value: "t"},
-				{Action: 1, Value: "c"},
-				{Action: 0, Value: "r"},
-				{Action: 0, Value: "e"},
-				{Action: 0, Value: "a"},
-				{Action: 0, Value: "m"},
-			},
-		},
-		{
-			name: "japanese",
-			args: args{
-				a: "hello,world!",
-				b: "hello,世界!",
-			},
-			want: []diff.Edit{
-				{Action: 0, Value: "h"},
-				{Action: 0, Value: "e"},
-				{Action: 0, Value: "l"},
-				{Action: 0, Value: "l"},
-				{Action: 0, Value: "o"},
-				{Action: 0, Value: ","},
-				{Action: -1, Value: "w"},
-				{Action: -1, Value: "o"},
-				{Action: -1, Value: "r"},
-				{Action: -1, Value: "l"},
-				{Action: -1, Value: "d"},
-				{Action: 1, Value: "世"},
-				{Action: 1, Value: "界"},
-				{Action: 0, Value: "!"},
+				{Action: 0, Value: `x := "hello"`},
+				{Action: -1, Value: "w := z"},
+				{Action: 1, Value: `y := "world"`},
+				{Action: 1, Value: "w := x"},
 			},
 		},
 	}
@@ -114,7 +79,7 @@ func TestDiff(t *testing.T) {
 			}
 
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Diff() = %v, want %v", got, tt.want)
+				t.Errorf("\nDiff()\n\t%v\nwant\n\t%v", got, tt.want)
 			}
 		})
 	}

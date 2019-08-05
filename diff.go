@@ -1,6 +1,9 @@
 package diff
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type path struct {
 	i int
@@ -9,15 +12,15 @@ type path struct {
 
 // Diff computes difference between a and b.
 func Diff(a, b string) []Edit {
-	x := []rune(a)
-	y := []rune(b)
+	x := strings.Split(a, "\n")
+	y := strings.Split(b, "\n")
 
 	return diff(x, y)
 }
 
 // diff computes Shortest Edit Script by O(ND) algorithm.
 // http://www.xmailserver.org/diff2.pdf
-func diff(x, y []rune) []Edit {
+func diff(x, y []string) []Edit {
 
 	m := len(x)
 	n := len(y)
@@ -47,7 +50,7 @@ func diff(x, y []rune) []Edit {
 	panic(fmt.Errorf("found a bug: x = %v, y = %v ", x, y))
 }
 
-func tracePath(path []path, x []rune, y []rune) []Edit {
+func tracePath(path []path, x []string, y []string) []Edit {
 	i := len(path) - 1
 	k := 1
 
@@ -57,13 +60,13 @@ func tracePath(path []path, x []rune, y []rune) []Edit {
 		q := path[i-k]
 		switch {
 		case p.i-q.i == 1 && p.j-q.j == 1:
-			edit := Edit{Action: 0, Value: string(x[q.i])}
+			edit := Edit{Action: 0, Value: x[q.i]}
 			reversedSes = append(reversedSes, edit)
 		case p.j-q.j == 1 && p.i == q.i:
-			edit := Edit{Action: 1, Value: string(y[q.j])}
+			edit := Edit{Action: 1, Value: y[q.j]}
 			reversedSes = append(reversedSes, edit)
 		case p.i-q.i == 1 && p.j == q.j:
-			edit := Edit{Action: -1, Value: string(x[q.i])}
+			edit := Edit{Action: -1, Value: x[q.i]}
 			reversedSes = append(reversedSes, edit)
 		default:
 			k++
